@@ -1,3 +1,4 @@
+pub(crate)
 fn is_prime(n: i64) -> bool
 {
     if n <= 3
