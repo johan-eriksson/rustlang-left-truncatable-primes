@@ -1,7 +1,37 @@
 mod prime;
 
+use std::time::{Instant};
+use std::thread;
+
+
 fn main() {
+    let start = Instant::now();
+    run_sequentially();
+    let seq_runtime = start.elapsed();
+    run_in_parallel();
+    let parallel_runtime = start.elapsed() - seq_runtime;
+    println!("It took {0} s to run in sequence and {1} s to run in parallel", seq_runtime.as_secs_f64(), parallel_runtime.as_secs_f64());
+}
+
+fn run_in_parallel()
+{
+    let mut handles = Vec::new();
+    for i in [2,3,5,7].iter()
+{
+    handles.push(thread::spawn(move || {
+        let endpoints = find_all_endpoints(*i);
+        println!("From thread: Starting point {0} has {1} end points", i, endpoints.len());
+    }));
+}
+
+for handle in handles  {
+    handle.join().unwrap();
+}
     
+}
+
+fn run_sequentially()
+{
     for i in [2,3,5,7].iter()
     {
         let endpoints = find_all_endpoints(*i);
